@@ -2,7 +2,7 @@
 # 把本工作区的插件代码同步到发布仓库，并在通过测试后提交、推送。
 #
 # 用法：
-#   ./scripts/sync-to-repo.sh                       # 同步 + 测试 + 提交 + 推送
+#   ./scripts/sync-to-repo.sh -t /path/to/repo       # 同步 + 测试 + 提交 + 推送（必须指定目标仓库）
 #   ./scripts/sync-to-repo.sh -m "修了什么"          # 指定提交说明
 #   ./scripts/sync-to-repo.sh -f /tmp/msg.txt        # 从文件读提交说明
 #   ./scripts/sync-to-repo.sh --no-test --no-push    # 只同步并提交，不测试/不推送
@@ -99,17 +99,17 @@ git diff --cached --stat | tail -20
 # ── 测试（在目标仓库里跑，确认复制后可用）─────────────────
 if [[ $RUN_TESTS -eq 1 ]]; then
   step "在目标仓库运行测试"
-  if ! node --test test/*.test.mjs >/tmp/dsh-jingfang-test.log 2>&1; then
-    tail -30 /tmp/dsh-jingfang-test.log
+  if ! node --test test/*.test.mjs >/tmp/dsh-zhongzhong-test.log 2>&1; then
+    tail -30 /tmp/dsh-zhongzhong-test.log
     die "测试未通过，已中止提交（改动仍在工作区，可用 git reset 撤销暂存）" 2
   fi
-  tail -5 /tmp/dsh-jingfang-test.log | sed 's/^/  /'
+  tail -5 /tmp/dsh-zhongzhong-test.log | sed 's/^/  /'
   if command -v node >/dev/null; then
-    node scripts/check.mjs >/tmp/dsh-jingfang-check.log 2>&1 || {
-      tail -10 /tmp/dsh-jingfang-check.log
+    node scripts/check.mjs >/tmp/dsh-zhongzhong-check.log 2>&1 || {
+      tail -10 /tmp/dsh-zhongzhong-check.log
       die "包结构检查未通过，已中止提交" 2
     }
-    tail -1 /tmp/dsh-jingfang-check.log | sed 's/^/  /'
+    tail -1 /tmp/dsh-zhongzhong-check.log | sed 's/^/  /'
   fi
 else
   say "已按 --no-test 跳过测试"
