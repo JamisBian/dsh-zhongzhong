@@ -250,6 +250,10 @@ test('special 问诊阶段：六组问题、选项齐全、答案能回填', () 
   for (const q of questions) {
     assert.ok(Array.isArray(q.options) && q.options.length >= 5, `${q.header} 选项过少`)
     assert.ok(q.options.some((o) => o.label === '以上都没有'), `${q.header} 缺兜底选项`)
+    for (const option of q.options) {
+      if (option.label === '以上都没有') continue
+      assert.ok(resolveId(option.label) !== undefined, `${q.header} 选项未登记：${option.label}`)
+    }
   }
   const caseData = applyAnswers(emptyCase(), [
     { id: 'sym_zz_qi_blood', selected: ['胸中大气下陷（气短不足以息）', '崩漏'] },
