@@ -285,6 +285,16 @@ dsh plugin --profile web add /path/to/dsh-zhongzhong
 - 改 `lib/client.js`（卡片）：重载窗口即可
 - 改 `lib/tools.js`、`lib/engine/*`、`lib/data/*`（宿主侧）：**必须完全退出并重启应用**
 
+### 常见问题：`/zhongzhong` 不在 `/` 菜单里，反而是 `/jingfang` 启动了衷中参西
+
+这通常不是方剂数据的问题，而是**插件/profile/技能注册**的问题。按下面顺序查：
+
+1. **看装到了哪个 profile**：DSH 只在启动时组合 profile。`~/.dsh/profiles/desktop/package.json` 里如果只有 `dsh-jingfang`、没有 `dsh-zhongzhong`，菜单里当然不会有 `/zhongzhong`。
+2. **装完必须完全退出应用再启动**，不是刷新窗口；宿主插件在启动时载入。
+3. **旧版 `dsh-jingfang` 还在时**，它的全局提示会让模型去加载 `jingfang`；如果此时 zhongzhong 的技能没有注册成功，就会出现「`/jingfang` 反而按衷中参西行事、`/zhongzhong` 却调不起来」的错位。调试时可以先在 Plugins 里禁用/移除 `dsh-jingfang`，只留 `dsh-zhongzhong`，重启确认 `/zhongzhong` 出现。
+4. **0.1.1 起**：技能注册会先用 `ctx.get('skills')`，拿不到就用 `ctx.inject(['skills'])` 等 skill 服务挂载后再注册；并且**全局 POINTER 与技能注册绑定**——技能没注册成功时不再注入「请加载 zhongzhong」的全局提示，避免上面那种错位。
+5. 确认命令：重启后 `/` 菜单里应同时看到（或只看到）`zhongzhong`；`dsh --profile desktop --dump-config | grep -A1 zhongzhong` 应看到 `id: zhongzhong / name: dsh-zhongzhong`。
+
 ### C. 确认装好了
 
 ```bash
@@ -413,14 +423,14 @@ test/
   engine.test.mjs       28 个引擎测试（原经方）
   flow.test.mjs         30 个流程测试（原经方）
   client.test.mjs       7 个客户端卡片测试
-  zhongzhong.test.mjs   25 个张锡纯方/单方/统一引擎测试
+  zhongzhong.test.mjs   26 个张锡纯方/单方/统一引擎测试
 ```
 
 自检：
 
 ```bash
 node scripts/check.mjs        # 24 项包结构检查
-node --test test/*.test.mjs   # 90 个测试
+node --test test/*.test.mjs   # 91 个测试
 node scripts/coverage-zhongzhong.mjs  # 张锡纯方 + 单方覆盖度
 ```
 

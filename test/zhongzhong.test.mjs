@@ -394,6 +394,41 @@ test('端到端：气短不足以息 → 升陷汤 → 证据 → 处方', async
   assert.match(prescribed.text, /不能替代面诊/)
 })
 
+test('skills 服务晚挂载时，技能仍然注册为 zhongzhong', () => {
+  const registered = []
+  let resume
+  const sections = []
+  const ctx = {
+    tools: { register: () => () => {} },
+    systemPrompt: { section: (section) => { sections.push(section); return () => {} } },
+    effect: (run) => run(),
+    get(name) {
+      return this[name]
+    },
+    inject(deps, callback) {
+      assert.deepEqual(deps, ['skills'])
+      resume = callback
+      return () => {}
+    }
+  }
+  apply(ctx)
+  assert.equal(registered.length, 0, 'skills 未就绪时不应硬注册')
+  assert.equal(sections.length, 0, '技能未注册时不应先挂 POINTER')
+  ctx.skills = {
+    register(definition) {
+      registered.push(definition)
+      return () => {}
+    }
+  }
+  assert.equal(typeof resume, 'function')
+  resume()
+  assert.equal(registered.length, 1)
+  assert.equal(registered[0].name, 'zhongzhong')
+  assert.equal(registered[0].invocation.userInvocable, true)
+  assert.equal(sections.length, 1)
+  assert.match(sections[0].text, /zhongzhong/)
+})
+
 test('端到端：单方石膏的确认与处方', async () => {
   const host = makeHost([[{ id: 'confirm_prescribe', selected: ['确认开方'] }]])
   apply(host.ctx)

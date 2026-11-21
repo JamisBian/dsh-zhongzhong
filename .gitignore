@@ -158,6 +158,7 @@ vite.config.ts.timestamp-*
 
 # 本地调试产物
 .scratch/
+.scratch*/
 .tmp-*/
 .probe.txt
 .dsh-drop/
