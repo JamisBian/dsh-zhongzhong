@@ -385,12 +385,24 @@ function briefOf(formula) {
   return text.length > 60 ? `${text.slice(0, 60)}…` : text
 }
 
+const PREP_RE = /(去皮|去节|去核|去净核|去足|去翅|去油|去芦|去毛|去心|去粗皮|研细|研末|研|捣细|捣碎|捣|切片|切碎|切丝|锉碎|锉细|锉|洗净|酒炒|醋炙|醋制|煨|炮制|炮|水飞|另炖|另煎|冲服|包煎|后下|先煎|烊化|蜜炙|盐炒|土炒|麸炒|米炒|炒炭|煅|打碎|轧细|晒干|焙|生用|炒用|炒|炙|生|熟|清|鲜|净|真)/
+
+/** 「炮制」列只保留短描述；长句（如无…代之、炒至…）不进处方笺。 */
+function cleanPrep(prep) {
+  if (typeof prep !== 'string') return ''
+  const text = prep.trim()
+  if (text === '') return ''
+  if (text.length <= 6 && !/[，,。；;如可或用代之者]/.test(text)) return text
+  const match = PREP_RE.exec(text)
+  return match === null ? '' : match[0]
+}
+
 /** 组成 → 引擎格式。 */
 function compositionOf(formula) {
   return formula.composition.map((part) => {
     const base = {
       herb: part.herb,
-      prep: typeof part.prep === 'string' ? part.prep : '',
+      prep: cleanPrep(part.prep),
       raw: part.raw ?? ''
     }
     if (Array.isArray(part.dose) && part.dose.length > 0) {
