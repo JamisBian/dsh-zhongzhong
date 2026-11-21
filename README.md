@@ -294,6 +294,8 @@ dsh plugin --profile web add /path/to/dsh-zhongzhong
 3. **旧版 `dsh-jingfang` 还在时**，它的全局提示会让模型去加载 `jingfang`；如果此时 zhongzhong 的技能没有注册成功，就会出现「`/jingfang` 反而按衷中参西行事、`/zhongzhong` 却调不起来」的错位。调试时可以先在 Plugins 里禁用/移除 `dsh-jingfang`，只留 `dsh-zhongzhong`，重启确认 `/zhongzhong` 出现。
 4. **0.1.1 起**：技能注册会先用 `ctx.get('skills')`，拿不到就用 `ctx.inject(['skills'])` 等 skill 服务挂载后再注册；并且**全局 POINTER 与技能注册绑定**——技能没注册成功时不再注入「请加载 zhongzhong」的全局提示，避免上面那种错位。
 5. 确认命令：重启后 `/` 菜单里应同时看到（或只看到）`zhongzhong`；`dsh --profile desktop --dump-config | grep -A1 zhongzhong` 应看到 `id: zhongzhong / name: dsh-zhongzhong`。
+6. **Plugins 页面里这一行显示「等待依赖」（fiber pending）**：多半是 `lib/index.js` 的 `inject` 写法不对。Cordis 4 只认「服务名数组」或「服务名 → 拦截配置」的对象；写成 `{ required: [...], optional: [...] }`（Koishi 习惯）会被当成两个名叫 `required` / `optional` 的服务，等不到就永远 pending。正确写法：`export const inject = ['tools', 'systemPrompt']`，可选服务在 `apply` 里用 `ctx.get()` 探测、用 `ctx.inject(['skills'])` 等服务挂载。
+7. **敲 `/zhongzhong` 报 `loaded skill "zhongzhong" source must be a string`**：`skills.register()` 注册时不校验 `source`，但加载技能时 `validateDefinition()` 要求 `source`、`provider`、`content` 都是字符串。注册对象里补一行 `source: 'runtime'` 即可（`provider` 会默认成 `runtime`）。
 
 ### C. 确认装好了
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+- fix: `inject` 写成 `{ required, optional }` 在 Cordis 4 里不生效——会被当成两个名叫 `required` / `optional` 的服务，fiber 永远 `pending`，Plugins 页显示「等待依赖」，`/zhongzhong` 不出现。改为服务名数组 `['tools', 'systemPrompt']`；`userQuestions` / `skills` 仍在运行时用 `ctx.get()` 与 `ctx.inject(['skills'])` 探测。
+- fix: 技能注册对象补 `source: 'runtime'`。`skills.register()` 只校验 name/description/invocation，但真正加载技能时 `validateDefinition()` 要求 `source`/`provider`/`content` 都是字符串，缺了就会抛 `loaded skill "zhongzhong" source must be a string`（`inject` 修好后立刻暴露的下一个坑）。
+- test: 导出契约断言 `inject` 是服务名数组，防止再写回对象形式；技能注册断言 `source: 'runtime'`。
+
 ## 0.1.1
 
 - fix: `skills` 服务晚于 `tools`/`systemPrompt` 挂载时，`/zhongzhong` 不注册的问题；现在用 `ctx.inject(['skills'])` 等 skill 服务就绪后再注册。

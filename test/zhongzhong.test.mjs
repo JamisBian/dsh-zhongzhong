@@ -296,7 +296,8 @@ test('剂量体系切换不影响证据门槛', async () => {
 
 test('插件导出契约与工具表', () => {
   assert.equal(name, 'dsh-zhongzhong')
-  assert.deepEqual(inject.required, ['tools', 'systemPrompt'])
+  assert.ok(Array.isArray(inject), 'inject 必须是服务名数组，不能是 { required, optional }')
+  assert.deepEqual(inject, ['tools', 'systemPrompt'])
   const host = makeHost([])
   apply(host.ctx)
   assert.deepEqual([...host.registered.keys()].sort(), [
@@ -309,6 +310,8 @@ test('插件导出契约与工具表', () => {
     'zhongzhong_prescribe'
   ])
   assert.equal(host.skills[0].name, 'zhongzhong')
+  // 加载技能时 validateDefinition() 要求 source 是字符串，缺了会报 source must be a string
+  assert.equal(host.skills[0].source, 'runtime')
   assert.match(host.ctx.sections[0].text, /zhongzhong/)
 })
 

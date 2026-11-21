@@ -71,7 +71,10 @@ const intakeAnswers = [
 
 test('插件导出契约', async () => {
   assert.equal(name, 'dsh-zhongzhong')
-  assert.deepEqual(inject.required, ['tools', 'systemPrompt'])
+  // Cordis 4 只认「服务名数组」；写成 { required, optional } 会等两个不存在的服务，
+  // fiber 永远 pending，Plugins 页显示「等待依赖」。
+  assert.ok(Array.isArray(inject), 'inject 必须是服务名数组')
+  assert.deepEqual(inject, ['tools', 'systemPrompt'])
   const host = makeHost([])
   apply(host.ctx)
   assert.deepEqual([...host.registered.keys()].sort(), [
