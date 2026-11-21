@@ -155,3 +155,9 @@ vite.config.ts.timestamp-*
 .nx/cache
 .nx/workspace-data
 .nx/migrate-runs
+
+# 本地调试产物
+.scratch/
+.tmp-*/
+.probe.txt
+.dsh-drop/

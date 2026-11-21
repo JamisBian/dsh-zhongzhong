@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2026 JamisBian
+Copyright (c) 2026 dsh-zhongzhong contributors
+Portions Copyright (c) 2026 dsh-jingfang contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+免责声明：本软件为中医学学习与研究工具，所输出的辨证结论、方剂与剂量
+均不构成医疗建议，不能替代执业医师的面诊与处方。方中剂量按「1 两 = 3 克」
+折算，属保守换算；含毒性药材（附子、细辛、麻黄、半夏、吴茱萸等）的方剂
+必须在执业中医师指导下使用。使用者应自行承担据此用药的全部风险。

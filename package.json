@@ -1,0 +1,68 @@
+{
+  "name": "dsh-zhongzhong",
+  "version": "0.1.0",
+  "description": "中医衷中参西问诊插件：经方 + 《医学衷中参西录》方剂与单方，统一问诊、方证辨证、文献核查、确认后开方。",
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "cordis",
+    "plugin",
+    "tcm",
+    "jingfang",
+    "经方",
+    "伤寒论",
+    "金匮要略",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis-plugin",
+    "traditional-chinese-medicine",
+    "张锡纯",
+    "医学衷中参西录",
+    "衷中参西",
+    "单方",
+    "zhongzhong"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamisBian/dsh-zhongzhong.git"
+  },
+  "homepage": "https://github.com/JamisBian/dsh-zhongzhong#readme",
+  "bugs": {
+    "url": "https://github.com/JamisBian/dsh-zhongzhong/issues"
+  },
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-tool"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "coverage": "node scripts/coverage-zhongzhong.mjs",
+    "parse": "node scripts/parse-zhongzhong.mjs",
+    "gen": "node scripts/gen-zhongzhong.mjs",
+    "demo": "node scripts/demo.mjs"
+  }
+}
