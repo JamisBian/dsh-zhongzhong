@@ -1,6 +1,6 @@
 // 无界面演示：模拟一位患者走完整条经方接诊流程，把每一步的卡片内容打印出来。
 // 用法：node scripts/demo.mjs            （离线文献核查）
-//       node scripts/demo.mjs --online    （实时查 PubMed）
+//       node scripts/demo.mjs --online    （联网查中文文献；脚本没有注入 tcm_lit_search，会显示未启用）
 
 import { apply } from '../lib/index.js'
 
