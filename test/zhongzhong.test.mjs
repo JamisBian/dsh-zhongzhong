@@ -11,6 +11,7 @@ import { verify, classicEvidence } from '../lib/engine/evidence.js'
 import { buildSheet, compositionLines, DOSE_BASIS } from '../lib/engine/prescribe.js'
 import { doseOf, doseText } from '../lib/engine/dose.js'
 import { FAMILIES, familyInPlay, familyOf } from '../lib/data/families.js'
+import { sourceQuestion, concernQuestion } from '../lib/engine/discuss.js'
 import { combineCheck } from '../lib/engine/combine.js'
 import { questionsFor, applyAnswers, STAGES } from '../lib/questions.js'
 import { emptyCase } from '../lib/engine/case.js'
@@ -267,6 +268,26 @@ test('special 问诊阶段：六组问题、选项齐全、答案能回填', () 
   assert.ok(caseData.symptoms.includes('stone_urine'))
 })
 
+test('症状/舌脉/方族选项卡都有「以上都没有」兜底', () => {
+  for (const stage of ['symptoms', 'symptoms2', 'signs']) {
+    for (const q of questionsFor(stage)) {
+      if (q.id === 'notes') continue // 有「没有补充」
+      if (q.id.startsWith('sign_')) continue // 有「没有测量」
+      assert.ok(q.options.some((o) => o.label === '以上都没有'), `${q.header} 缺兜底选项`)
+    }
+  }
+  const context = questionsFor('intake').find((q) => q.id === 'context')
+  assert.ok(context.options.some((o) => o.label === '以上都没有'), '特殊情况缺兜底选项')
+  for (const family of FAMILIES) {
+    for (const q of family.questions) {
+      assert.ok(q.options.some((o) => o.label.includes('以上都没有')), `${q.header} 缺兜底选项`)
+    }
+  }
+  for (const q of [sourceQuestion(), concernQuestion()]) {
+    assert.ok(q.options.some((o) => o.label === '以上都没有'), `${q.header} 缺兜底选项`)
+  }
+})
+
 test('新症状接入病历摘要与危险信号', () => {
   const c = normalizeCase({ symptoms: ['崩漏', '头晕目眩', '脑充血/头目胀痛'] })
   const summary = caseSummary(c)
@@ -324,7 +345,7 @@ test('端到端：气短不足以息 → 升陷汤 → 证据 → 处方', async
       { id: 'sex', selected: ['男'] },
       { id: 'chief', selected: ['其他（请在下方填写）'], custom: '气短、吸气费劲' },
       { id: 'duration', selected: ['1–4周'] },
-      { id: 'context', selected: ['以上都不是'] }
+      { id: 'context', selected: ['以上都没有'] }
     ],
     // symptoms
     [

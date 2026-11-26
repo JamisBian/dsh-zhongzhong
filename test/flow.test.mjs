@@ -464,7 +464,7 @@ test('方族鉴别：承气汤家族也会触发', async () => {
 
 test('家族鉴别：患者说「说不清」时退出，不硬套', async () => {
   const host = makeHost([
-    [{ id: 'family_sini_daiyang', selected: ['说不清 / 都不像'] }],
+    [{ id: 'family_sini_daiyang', selected: ['以上都没有（说不清 / 都不像）'] }],
     [{ id: 'family_sini_pattern', selected: [] }],
     [{ id: 'discriminate_2', selected: ['以上都没有'] }]
   ])
