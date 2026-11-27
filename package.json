@@ -1,6 +1,6 @@
 {
   "name": "dsh-zhongzhong",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "中医衷中参西问诊插件：经方 + 《医学衷中参西录》方剂与单方，统一问诊、方证辨证、文献核查、确认后开方。",
   "keywords": [
     "deepseek",

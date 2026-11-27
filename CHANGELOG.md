@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- fix: **`zhongzhong_prescribe` 报 `value is not lossless JSON`，开方这条路必然失败**。成功出方（`status=prescribed`）与「先看文献依据」（`status=evidence_only`）返回对象里写了 `high_match: exception ? highMatch : undefined`，非高匹配度例外时该键就是 `undefined`；`undefined` 在 JSON 往返后消失，被宿主判为「非无损 JSON」。拒绝（`blocked`）、报错（`error`）、取消（`cancelled`）分支不带该键，所以表现为「能拦人、不能开方」。改为条件展开，仅在例外开方时才带该键。
+- fix: 工具出口统一走 `jsonSafe()` 深清洗（新增 `lib/engine/json-safe.js`）：丢弃 `undefined` 键、`NaN`/`±Infinity` 转 `null`、`BigInt`/`Date` 转字符串、循环引用转 `'[Circular]'`，避免同类问题再次让工具整体报错。
+- test: 新增 `test/json-safe.test.mjs`：`jsonSafe` 单测 + 开方三条分支（prescribed / blocked / evidence_only）的无损 JSON 断言。
+
 ## 0.2.1
 
 - fix: 问诊选项卡补齐「以上都没有」兜底：症状 9 组（寒热/汗/头身/胸腹/饮食/二便/睡眠/咳喘/其他）、舌象、脉象、特殊情况、方族鉴别题（6 族 7 题），以及讨论卡的依据来源/担心点、候选方卡。特殊情况原来的「以上都不是」统一为「以上都没有」。
